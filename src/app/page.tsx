@@ -181,7 +181,7 @@ export default async function Home() {
             <span className="section-number">04</span> / IL DOCUMENTO
           </p>
           <h2>Le idee, nero su bianco.</h2>
-          <p>Il programma completo sarà disponibile per la lettura e il download appena pubblicato.</p>
+          <p>Il programma completo è disponibile per la lettura e il download.</p>
         </div>
         <Link className="circle-link" href="/programma" aria-label="Vai alla pagina del programma">
           ↗

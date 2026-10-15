@@ -23,7 +23,7 @@ export default async function ProgramPage() {
           <br />
           <em>su bianco.</em>
         </h1>
-        <p>Il programma completo sarà pubblicato in un documento accessibile da leggere online e scaricare.</p>
+        <p>Il programma completo è pubblicato in un documento accessibile da leggere online e scaricare.</p>
       </section>
       <section className="content-section wrap">
         <div className="program-empty">

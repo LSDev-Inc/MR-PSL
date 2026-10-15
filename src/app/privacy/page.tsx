@@ -21,7 +21,7 @@ export default function PrivacyPage() {
         </h1>
         <p>
           La piattaforma è stata progettata per ridurre al minimo i dati raccolti. Questa pagina descrive il
-          funzionamento attuale e deve essere completata dal titolare prima dell’attivazione pubblica.
+          funzionamento attuale.
         </p>
       </section>
       <section className="content-section wrap content-narrow">
@@ -63,14 +63,6 @@ export default function PrivacyPage() {
           HTTP-only, SameSite Strict e scade dopo quattro ore. I font vengono serviti dal sistema locale del
           dispositivo.
         </p>
-        <div className="notice-card">
-          <strong>Revisione necessaria prima del lancio</strong>
-          <p>
-            Questa pagina fornisce trasparenza tecnica ma non sostituisce la revisione del titolare del trattamento o un
-            parere legale. Completa le informazioni mancanti e verifica la configurazione reale dei fornitori prima di
-            raccogliere risposte pubblicamente.
-          </p>
-        </div>
       </section>
     </SiteShell>
   );
