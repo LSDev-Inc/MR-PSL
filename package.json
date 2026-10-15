@@ -1,0 +1,51 @@
+{
+  "name": "ramadu-student-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:init": "tsx scripts/init-database.ts",
+    "bootstrap:admin": "tsx scripts/bootstrap-admin.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1011.0",
+    "@hookform/resolvers": "^5.2.2",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.1.0",
+    "lucide-react": "^0.577.0",
+    "mongoose": "^9.1.5",
+    "motion": "^12.35.0",
+    "next": "16.4.1",
+    "qrcode": "^1.5.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-hook-form": "^7.71.2",
+    "recharts": "^3.8.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@playwright/test": "^1.58.2",
+    "@tailwindcss/turbopack": "^4.2.0",
+    "@types/node": "^24.0.0",
+    "@types/pngjs": "^6.0.5",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "tailwindcss": "^4.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.5"
+  }
+}
