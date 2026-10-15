@@ -12,6 +12,17 @@ import { AdminUser } from "@/models";
 export const runtime = "nodejs";
 const loginSchema = z.object({ email: z.string().email().max(254), password: z.string().min(1).max(256) }).strict();
 
+function serviceFailureReason(error: unknown) {
+  if (!(error instanceof Error)) return "unexpected";
+  if (error.message.startsWith("Database non configurato")) return "mongodb_config";
+  if (error.message.startsWith("Autenticazione non configurata")) return "auth_secret_config";
+  if (/MongoServerSelectionError|MongoNetworkError|MongoTimeoutError/.test(error.name)) return "mongodb_unreachable";
+  const code = "code" in error ? error.code : undefined;
+  if (code === 18 || /authentication failed/i.test(error.message)) return "mongodb_auth";
+  if (code === 13) return "mongodb_permission";
+  return "login_dependency";
+}
+
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return jsonError("Richiesta non valida.", 403);
   let body: unknown;
@@ -57,6 +68,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ ok: true }, { headers: { "cache-control": "no-store" } });
   } catch (error) {
+    console.error("[admin-login] servizio non disponibile", { reason: serviceFailureReason(error) });
     if (
       process.env.NODE_ENV !== "production" &&
       error instanceof Error &&
