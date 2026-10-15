@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Esprimi il tuo interesse attraverso un sondaggio facoltativo, anonimo e informale.",
   alternates: { canonical: "/partecipa" },
 };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ParticipatePage() {
   const campaign = await getPublicCampaign();

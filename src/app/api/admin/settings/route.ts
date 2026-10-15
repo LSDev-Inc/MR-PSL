@@ -4,6 +4,7 @@ import { recordAudit } from "@/lib/audit";
 import { actorHasPermission, getAdminActor } from "@/lib/auth";
 import { connectDb } from "@/lib/db";
 import { jsonError, sameOrigin } from "@/lib/http";
+import { revalidatePublicCampaign } from "@/lib/public-content";
 import { INSTITUTION_ID } from "@/lib/tenant";
 import { Campaign } from "@/models";
 
@@ -113,6 +114,7 @@ export async function PATCH(request: Request) {
       { $set: update, $setOnInsert: { institutionId: INSTITUTION_ID } },
       { upsert: true, runValidators: true },
     );
+    revalidatePublicCampaign();
     await recordAudit({
       actorId: actor.id,
       actorRole: actor.role,

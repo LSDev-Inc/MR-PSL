@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Conosci gli studenti candidati per il Polo Tecnico dell’IIS Massimiliano Ramadù.",
   alternates: { canonical: "/candidati" },
 };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function CandidatesPage() {
   const campaign = await getPublicCampaign();

@@ -6,6 +6,7 @@ import { isCloudinaryImageUrl } from "@/lib/cloudinary";
 import { connectDb } from "@/lib/db";
 import { env } from "@/lib/env";
 import { jsonError, sameOrigin } from "@/lib/http";
+import { revalidatePublicCampaign } from "@/lib/public-content";
 import { INSTITUTION_ID } from "@/lib/tenant";
 import { Candidate } from "@/models";
 
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
       { $set: { ...parsed.data, institutionId: INSTITUTION_ID, demoOnly: false } },
       { upsert: true, runValidators: true },
     );
+    revalidatePublicCampaign();
     await recordAudit({
       actorId: actor.id,
       actorRole: actor.role,

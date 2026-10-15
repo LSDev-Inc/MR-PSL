@@ -14,6 +14,7 @@ import {
 import { connectDb } from "@/lib/db";
 import { env } from "@/lib/env";
 import { jsonError, sameOrigin } from "@/lib/http";
+import { revalidatePublicCampaign } from "@/lib/public-content";
 import { INSTITUTION_ID } from "@/lib/tenant";
 import { Campaign } from "@/models";
 
@@ -37,6 +38,7 @@ async function publishProgram(
     },
     { upsert: true, runValidators: true },
   );
+  revalidatePublicCampaign();
   await recordAudit({
     actorId: actor.id,
     actorRole: actor.role,
@@ -88,6 +90,7 @@ export async function DELETE(request: Request) {
     if (!campaign?.program?.url) return NextResponse.json({ ok: true, removed: false });
 
     await Campaign.updateOne({ institutionId: INSTITUTION_ID }, { $unset: { program: 1 } });
+    revalidatePublicCampaign();
     await recordAudit({
       actorId: actor.id,
       actorRole: actor.role,

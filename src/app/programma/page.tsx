@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Leggi e scarica il programma della candidatura studentesca al Polo Tecnico.",
   alternates: { canonical: "/programma" },
 };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ProgramPage() {
   const campaign = await getPublicCampaign();

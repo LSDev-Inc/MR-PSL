@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/informazioni" },
 };
 
+export const revalidate = 60;
+
 export default function InformationPage() {
   return (
     <SiteShell>

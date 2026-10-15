@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SiteShell } from "@/components/site-shell";
 import { getPublicCampaign } from "@/lib/public-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function Home() {
   const campaign = await getPublicCampaign();
@@ -115,10 +115,6 @@ export default async function Home() {
               <em>ascoltare.</em>
             </h2>
           </div>
-          <p className="section-aside">
-            Questi sono ambiti di confronto, non promesse elettorali. Le proposte saranno pubblicate solo dopo la
-            revisione e l’approvazione dei candidati.
-          </p>
         </div>
         <div className="topic-grid">
           {topics.map((topic, index) => (
