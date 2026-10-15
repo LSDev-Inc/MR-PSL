@@ -33,8 +33,10 @@ export async function POST(request: Request) {
   }
   const parsed = loginSchema.safeParse(body);
   if (!parsed.success) return jsonError("Inserisci un indirizzo email e una password validi.");
+  let stage = "database_connect";
   try {
     await connectDb();
+    stage = "rate_limit";
     const address = requestAddress(request);
     const rate = await takeRateLimit("admin-login", `${address}:${parsed.data.email.toLowerCase()}`, 8, 15 * 60 * 1000);
     if (!rate.allowed)
@@ -42,12 +44,14 @@ export async function POST(request: Request) {
         { error: "Troppi tentativi. Riprova più tardi." },
         { status: 429, headers: { "retry-after": String(rate.retryAfterSeconds), "cache-control": "no-store" } },
       );
+    stage = "user_lookup";
     const user = await AdminUser.findOne({
       institutionId: INSTITUTION_ID,
       email: parsed.data.email.toLowerCase(),
     }).select("+passwordHash email role permissions authVersion disabledAt");
     const valid = user && !user.disabledAt && (await compare(parsed.data.password, user.passwordHash));
     if (!valid) {
+      stage = "failed_login_audit";
       await recordAudit({
         actorId: "system",
         actorRole: "SYSTEM",
@@ -57,9 +61,12 @@ export async function POST(request: Request) {
       });
       return jsonError("Credenziali non riconosciute.", 401);
     }
+    stage = "user_update";
     user.lastLoginAt = new Date();
     await user.save();
+    stage = "session_create";
     await createAdminSession(user, request);
+    stage = "success_login_audit";
     await recordAudit({
       actorId: user._id.toString(),
       actorRole: user.role,
@@ -68,7 +75,16 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ ok: true }, { headers: { "cache-control": "no-store" } });
   } catch (error) {
-    console.error("[admin-login] servizio non disponibile", { reason: serviceFailureReason(error) });
+    const errorCode =
+      error && typeof error === "object" && "code" in error && (typeof error.code === "number" || typeof error.code === "string")
+        ? error.code
+        : undefined;
+    console.error("[admin-login] servizio non disponibile", {
+      reason: serviceFailureReason(error),
+      stage,
+      errorName: error instanceof Error ? error.name : "unknown",
+      errorCode,
+    });
     if (
       process.env.NODE_ENV !== "production" &&
       error instanceof Error &&
